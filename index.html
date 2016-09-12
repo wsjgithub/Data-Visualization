@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Visualization</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="js/paper-full.min.js"></script>
+  <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+
+  <script type="text/paperscript" src="js/script.js" canvas="target"></script>
+
+</head>
+<body>
+  <div style="margin:20px;padding:10px;">
+    <p>Please type in this format "City State"</p>
+    <p> Examples: "New York City NY", "Rochester NY"</p>
+    <form style="display:inline-block">
+      <div id="transportation">
+          <input type="radio" name="transportation" value="car" checked="true">Car</input>
+          <input type="radio" name="transportation" value="plane">Plane</input>
+          <input type="radio" name="transportation" value="train">Train</input>
+      </div>
+      <div id="origin" style="display:inline-block">
+        <span>Origin</span>
+         <input type="text" name="orign">
+      </div>
+      <div id="destination" style="display:inline-block">
+        <span>Destination</span>
+         <input type="text" name="destination">
+      </div>
+    </form>
+    <button style="display:inline-block" id="submit">Show CO2</button>
+    <p id="error" style="color:red"></p>
+    <div>
+      Quick Demo:
+      <button style="display:inline-block" id="demo">Rochester to NYC</button>
+      <button style="display:inline-block" id="demo1">Los Angeles to Seattle</button>
+    </div>
+    <form>
+      <div id="offset">
+        <span>Offset</span>
+         <input type="text" name="offset">
+      </div>
+    </form>
+    <button style="display:inline-block" id="demo">Offset</button>
+
+  </div>
+  <canvas id="target"  height="800px" width="800px"></canvas>
+  <div id="reference">
+    <p>Uses code from paperjs example <a href="http://paperjs.org/examples/bouncing-balls/">Bouncing Balls</a></p>
+
+    <p>API used:</p>
+    <p><a targe="_blank" href="https://developers.google.com/maps/documentation/geocoding/start">Google Geocoding</a></p>
+    <p><a target="_blank" href="https://www.trafiklab.se/api/calculate-co2-emission">Trafik Lab: Calculate CO2 Emission</a></p>
+  </div>
+</body>
+
+
+</html>
