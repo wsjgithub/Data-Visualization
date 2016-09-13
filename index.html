@@ -7,53 +7,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script type="text/javascript" src="js/paper-full.min.js"></script>
   <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
-
+  <link type="text/css" rel="stylesheet" href="css/style.css">
   <script type="text/paperscript" src="js/script.js" canvas="target"></script>
 
 </head>
 <body>
-  <div style="margin:20px;padding:10px;">
-    <p>Please type in this format "City State"</p>
-    <p> Examples: "New York City NY", "Rochester NY"</p>
-    <form style="display:inline-block">
-      <div id="transportation">
-          <input type="radio" name="transportation" value="car" checked="true">Car</input>
-          <input type="radio" name="transportation" value="plane">Plane</input>
-          <input type="radio" name="transportation" value="train">Train</input>
+
+    <!-- <p>Please type in this format "City State"</p>
+    <p> Examples: "New York City NY", "Rochester NY"</p> -->
+
+    <div class="wrapper">
+
+      <div id="origin-destination">
+        <div id="origin" style="display:inline-block">
+          <label>From</label>
+           <input class="active" type="text" name="orign" placeholder="Type a city such as New York NY">
+        </div>
+
+        <div id="destination" style="display:inline-block">
+          <span>To</span>
+           <input class="active" type="text" name="destination" placeholder="Type a city such as Seattle WA">
+        </div>
+        <button style="display:inline-block" id="submit">Show CO2</button>
+        <div class="city-list">
+          <p>Popular Cities</p>
+          <ul>
+            <li>Rochester NY</li>
+            <li>New York NY</li>
+            <li>Los Angeles CA</li>
+            <li>Chicago IL</li>
+            <li>Miami FL</li>
+          <ul>
+        </div>
+    </div>
+    <div id="transportation">
+        <input type="radio" name="transportation" value="car" checked="true">Car</input>
+        <input type="radio" name="transportation" value="plane">Plane</input>
+        <input type="radio" name="transportation" value="train">Train</input>
+    </div>
+    <!-- <div class="dropdown">
+      <button class="dropbtn">Transportation</button>
+      <div class="dropdown-content">
+        <p value="car">Car</p>
+        <p value="plane">Plane</p>
+        <p value="train">Train</p>
       </div>
-      <div id="origin" style="display:inline-block">
-        <span>Origin</span>
-         <input type="text" name="orign">
-      </div>
-      <div id="destination" style="display:inline-block">
-        <span>Destination</span>
-         <input type="text" name="destination">
-      </div>
-    </form>
-    <button style="display:inline-block" id="submit">Show CO2</button>
+    </div> -->
+    <!-- <button style="display:inline-block" id="submit">Show CO2</button> -->
     <p id="error" style="color:red"></p>
     <div>
       Quick Demo:
       <button style="display:inline-block" id="demo">Rochester to NYC</button>
       <button style="display:inline-block" id="demo1">Los Angeles to Seattle</button>
     </div>
-    <form>
-      <div id="offset">
-        <span>Offset</span>
-         <input type="text" name="offset">
-      </div>
-    </form>
-    <button style="display:inline-block" id="demo">Offset</button>
 
   </div>
-  <canvas id="target"  height="800px" width="800px"></canvas>
-  <div id="reference">
+
+
+
+
+  <canvas id="target"  resize="true" height="800px" width="800px"></canvas>
+
+  <!-- <div id="reference">
     <p>Uses code from paperjs example <a href="http://paperjs.org/examples/bouncing-balls/">Bouncing Balls</a></p>
 
     <p>API used:</p>
     <p><a targe="_blank" href="https://developers.google.com/maps/documentation/geocoding/start">Google Geocoding</a></p>
     <p><a target="_blank" href="https://www.trafiklab.se/api/calculate-co2-emission">Trafik Lab: Calculate CO2 Emission</a></p>
-  </div>
+  </div> -->
 </body>
 
 
