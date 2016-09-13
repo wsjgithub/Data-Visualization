@@ -21,12 +21,12 @@ function getData(_origin,_destination){
       transportation = $(this).prop("value");
     }
   });
-  $.getJSON(originReqeust, { get_param: 'value' }, function(data) {
+  $.getJSON(originReqeust, { get_param: 'value',dataType:"jsonp" }, function(data) {
       console.log("origin");
       console.log(data.results[0].geometry.location);
       originLocation = data.results[0].geometry.location;
   }).done(function(){
-    $.getJSON(destinationReqeust, { get_param: 'value' }, function(data) {
+    $.getJSON(destinationReqeust, { get_param: 'value',dataType:"jsonp" }, function(data) {
         console.log("destination");
         console.log(data.results[0].geometry.location);
         destinationLocation = data.results[0].geometry.location;
