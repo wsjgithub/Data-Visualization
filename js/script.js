@@ -21,41 +21,50 @@ function getData(_origin,_destination){
       transportation = $(this).prop("value");
     }
   });
-  $.getJSON(originReqeust, { get_param: 'value',dataType:"jsonp" }, function(data) {
+  $.getJSON(originReqeust, { get_param: 'value' }, function(data) {
       console.log("origin");
       console.log(data.results[0].geometry.location);
       originLocation = data.results[0].geometry.location;
   }).done(function(){
-    $.getJSON(destinationReqeust, { get_param: 'value',dataType:"jsonp" }, function(data) {
+
+    $.getJSON(destinationReqeust, { get_param: 'value' }, function(data) {
         console.log("destination");
         console.log(data.results[0].geometry.location);
         destinationLocation = data.results[0].geometry.location;
     }).done(function(){
-      var carbonRequest = "http://api.commutegreener.com/api/co2/emissions?startLat="+originLocation.lat+"&startLng="+originLocation.lng+"&endLat="+destinationLocation.lat+"&endLng="+destinationLocation.lng+"&format=json"
-      $.getJSON(carbonRequest, { get_param: 'value' }, function(data) {
-          var emission = {car:data.emissions[7].totalCo2,
-                          train:data.emissions[2].totalCo2,
-                          plane:data.emissions[9].totalCo2};
-          var distance = data.emissions[7].routedDistance;
-          console.log("transportation"+emission[transportation]);
-          console.log("routed distance"+distance);
-          //put animation here @@@@@@@@@@@@@@@@@@@@@@@@@
-          animate(Math.round(emission[transportation]/1000));
-          //show data on cavas
+      var carbonRequest = "https://api.commutegreener.com/api/co2/emissions?startLat="+originLocation.lat+"&startLng="+originLocation.lng+"&endLat="+destinationLocation.lat+"&endLng="+destinationLocation.lng+"&format=json"
+      $.ajax({
+        dataType: 'jsonp',
+        url: carbonRequest,
+        data: { get_param: 'value' },
+        success: function(data) {
+            var emission = {car:data.emissions[7].totalCo2,
+                            train:data.emissions[2].totalCo2,
+                            plane:data.emissions[9].totalCo2};
+            var distance = data.emissions[7].routedDistance;
+            console.log("transportation"+emission[transportation]);
+            console.log("routed distance"+distance);
+            //put animation here @@@@@@@@@@@@@@@@@@@@@@@@@
+            animate(Math.round(emission[transportation]/1000));
+            //show data on cavas
             if(dataDisplayed){
               dataDisplayed.visible = false;
             }
             dataDisplayed = new PointText({
-          	point: [0, 745],
-          	fillColor: 'black',
-            fontSize:20,
-          	content: 'CO2 Emission: '+(emission[transportation]/1000).toFixed(1)+" kg"+"\nDistance: "+(distance/1609).toFixed(1)+" miles"
-          });
+          	  point: [10, view.viewSize.height-80],
+          	  fillColor: 'rgb(50,60,80)',
+              fontSize:20,
+              content: 'CO2 Emission: '+(emission[transportation]/1000).toFixed(1)+" kg"+"\nDistance: "+(distance/1609).toFixed(1)+" miles"+"\nEach ball represents 1 kg of CO2"
+            });
+        }
       });
+
     });
+
   });
 
 };
+
 
 //Unused code ==============================================
 function getDistance(_origin,_destination){
@@ -81,17 +90,23 @@ function animate(number){
   for(var i=0;i<allBalls.length;i++){
     allBalls[i].hide();
   }
+  if(number<=0){
+    return;
+  }
   window.clearInterval(intervalID);
   var counter =0;
   intervalID = window.setInterval(function(){
-    var position = new Point(Math.random()*100+350,800-Math.random()*50),
-      vector = (Point.random() - [0.5, 0]) * [40, 50],
+    if(counter>=number){
+      window.clearInterval(intervalID);
+    }
+    var position = new Point(Math.random()*100+0.5*view.viewSize.width-50,view.viewSize.height*0.9-Math.random()*50),
+      vector = (Point.random() - 0.5) * 30;
       ball = new Ball(position, vector);
       allBalls.push(ball);
       counter++;
-      if(counter>=number){
-        window.clearInterval(intervalID);
-      }
+      // if(counter>=number){
+      //   window.clearInterval(intervalID);
+      // }
   },ballInterval);
 
   for(var i=0;i<fires.length;i++){
@@ -99,7 +114,7 @@ function animate(number){
   }
   for(var i=0;i<6;i++){
     // var f = new Fire(Math.random()*600+100,700-Math.random()*200,Math.random()*100+50,0,Math.random()+5);
-    var f = new Fire(400,800,Math.random()*number+Math.round(number)*0.6,0,Math.random()+5);
+    var f = new Fire(0.5*view.viewSize.width,view.viewSize.height*0.9,Math.random()*number+Math.round(number)*0.6,0,Math.random()+5);
     fires.push(f);
   }
 }
@@ -118,6 +133,7 @@ $("#submit").on("click",function(){
     $("#error").html("Please provide an input");
     console.log("provide an input");
   }
+  $(".city-list").css("display","none");
 });
 $("#demo").on("click",function(){
   getData("New York NY","Rochester NY");
@@ -125,6 +141,7 @@ $("#demo").on("click",function(){
 $("#demo1").on("click",function(){
   getData("Los Angeles CA","Seattle WA");
 });
+
 function parseLocation(loc){
   var trim = loc.trim();
   //var commat = trim.replace(/,/g, "+"); console.log(replace);
@@ -177,6 +194,9 @@ function parseLocation(loc){
     this.hide = function(){
       pathFire.visible = false;
     }
+    this.move = function(x,y){
+      pathFire.position = new Point(x,y);
+    }
 
   };
 
@@ -188,7 +208,7 @@ function parseLocation(loc){
 
 var Ball = function(point, vector) {
 	if (!vector || vector.isZero()) {
-		this.vector = Point.random() * 5;
+		this.vector = Point.random() * 5-2.5;
 	} else {
 		this.vector = vector * 2;
 	}
@@ -241,11 +261,11 @@ Ball.prototype.hide = function(){
 //Ball^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-var textItem = new PointText({
-	point: [0, 790],
-	fillColor: 'black',
-	content: 'Each ball represents 1kg CO2'
-});
+// var textItem = new PointText({
+// 	point: [view.viewSize.width*0.05, view.viewSize.height*0.95],
+// 	fillColor: 'black',
+// 	content: 'Each ball represents 1kg CO2'
+// });
 
 var speed = 5;
 
@@ -258,16 +278,14 @@ function onFrame(event) {
     }
 }
 
-
-
-// var lastDelta;
-// function onMouseDrag(event) {
-// 	lastDelta = event.delta;
-// }
-//
-// function onMouseUp(event) {
-// 	var ball = new Ball(event.point, lastDelta);
-// 	balls.push(ball);
-// 	lastDelta = null;
-// 	console.log("mouse up");
-// }
+//form  handling
+$("#origin-destination input").on("click",function(){
+  $(".city-list").css("display","block");
+  $("#error").html("");
+  //clear active
+  $("#origin-destination input").removeClass("active");
+  $(this).addClass("active");
+});
+$(".city-list ul li").on("click",function(){
+  $("#origin-destination input.active").val($(this).html());
+});
