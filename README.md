@@ -12,3 +12,5 @@ The web app visualizes the amount of CO2 emitted (per person) by traveling from 
 
 ###Code Used
 -Paper example: [Bouncing Balls](http://paperjs.org/examples/bouncing-balls/)
+
+[Open the visualizaion](https://rawgit.com/wsjgithub/Data-Visualization/master/index.html)
